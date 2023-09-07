@@ -1,8 +1,13 @@
 import os
+from typing import List, Tuple, Literal
+
 import psycopg2
 from dotenv import load_dotenv
 from datetime import date
 from psycopg2.extensions import AsIs
+
+ContractStatus = Literal['draft', 'active', 'completed']
+
 
 class PostgresqlDB():
     load_dotenv()
@@ -19,7 +24,7 @@ class PostgresqlDB():
         return cls.instance
 
     @property
-    def db_exists(self):
+    def db_exists(self) -> List[Tuple]:
         with psycopg2.connect(dbname=PostgresqlDB.DBNAME, user=PostgresqlDB.USER, password=PostgresqlDB.PASSWORD,
                               host=PostgresqlDB.HOST) as conn:
             with conn.cursor() as cur:
@@ -33,7 +38,8 @@ class PostgresqlDB():
                 ''')
                 return cur.fetchall()
 
-    def create_app_tables(self) -> None:
+    @staticmethod
+    def create_app_tables() -> None:
         with psycopg2.connect(dbname=PostgresqlDB.DBNAME, user=PostgresqlDB.USER, password=PostgresqlDB.PASSWORD,
                               host=PostgresqlDB.HOST) as conn:
             with conn.cursor() as cur:
@@ -58,7 +64,8 @@ class PostgresqlDB():
                         );                     
                        ''')
 
-    def create_record(self, table, name):
+    @staticmethod
+    def create_record(table: str, name: str) -> None:
         with psycopg2.connect(dbname=PostgresqlDB.DBNAME, user=PostgresqlDB.USER, password=PostgresqlDB.PASSWORD,
                               host=PostgresqlDB.HOST) as conn:
             with conn.cursor() as cur:
@@ -68,8 +75,8 @@ class PostgresqlDB():
                         ''', (AsIs(table), name, date.today())
                             )
 
-
-    def get_all_records(self, table):
+    @staticmethod
+    def get_all_records(table: str) -> List[Tuple]:
         with psycopg2.connect(dbname=PostgresqlDB.DBNAME, user=PostgresqlDB.USER, password=PostgresqlDB.PASSWORD,
                               host=PostgresqlDB.HOST) as conn:
             with conn.cursor() as cur:
@@ -80,8 +87,8 @@ class PostgresqlDB():
                     )
                 return cur.fetchall()
 
-
-    def get_single_record(self, table, id):
+    @staticmethod
+    def get_single_record(table: str, id: int) -> List[Tuple]:
         with psycopg2.connect(dbname=PostgresqlDB.DBNAME, user=PostgresqlDB.USER, password=PostgresqlDB.PASSWORD,
                               host=PostgresqlDB.HOST) as conn:
             with conn.cursor() as cur:
@@ -91,8 +98,8 @@ class PostgresqlDB():
                         ''', (AsIs(table), id))
                 return cur.fetchall()
 
-
-    def get_project_contracts(self, id):
+    @staticmethod
+    def get_project_contracts(id: int) -> List[Tuple]:
         with psycopg2.connect(dbname=PostgresqlDB.DBNAME, user=PostgresqlDB.USER, password=PostgresqlDB.PASSWORD,
                               host=PostgresqlDB.HOST) as conn:
             with conn.cursor() as cur:
@@ -102,7 +109,9 @@ class PostgresqlDB():
                         ''', (id, ))
                 return cur.fetchall()
 
-    def get_contracts_by_status(self, status=None, project_id=None, exclude=False):
+    @staticmethod
+    def get_contracts_by_status(status: ContractStatus = None, project_id: int = None,
+                                exclude: bool = False) -> List[Tuple]:
         with psycopg2.connect(dbname=PostgresqlDB.DBNAME, user=PostgresqlDB.USER, password=PostgresqlDB.PASSWORD,
                               host=PostgresqlDB.HOST) as conn:
             with conn.cursor() as cur:
@@ -124,8 +133,8 @@ class PostgresqlDB():
                                         ''', (status,))
                 return cur.fetchall()
 
-
-    def change_contract_status(self, id, status):
+    @staticmethod
+    def change_contract_status(id: int, status: ContractStatus ) -> None:
         if status == 'active':
             with psycopg2.connect(dbname=PostgresqlDB.DBNAME, user=PostgresqlDB.USER, password=PostgresqlDB.PASSWORD,
                                   host=PostgresqlDB.HOST) as conn:
@@ -146,8 +155,8 @@ class PostgresqlDB():
                                 WHERE id = %s            
                             ''', (status, id))
 
-
-    def add_contract_to_project(self, project_id, contract_id):
+    @staticmethod
+    def add_contract_to_project(project_id: int, contract_id: int) -> None:
         with psycopg2.connect(dbname=PostgresqlDB.DBNAME, user=PostgresqlDB.USER, password=PostgresqlDB.PASSWORD,
                               host=PostgresqlDB.HOST) as conn:
             with conn.cursor() as cur:
