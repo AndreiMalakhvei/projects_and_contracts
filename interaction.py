@@ -1,4 +1,4 @@
-from typing import Callable, Dict
+from typing import Dict
 
 from choice_handlers import ProjectHandler, ContractHandler, HotkeysChecker, WorkFlowError
 import functools

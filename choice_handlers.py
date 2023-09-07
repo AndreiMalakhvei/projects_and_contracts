@@ -52,7 +52,8 @@ class ProjectHandler(ChoiceHandler):
     def retrieve_object_info(self, obj_id: int):
         project = self.db.get_single_record(self.db_table, obj_id)
         contracts = self.db.get_project_contracts(project[0][0])
-        print(f"Информация о выбранном проекте:\nНазвание: {project[0][1]}\nДата создания: {project[0][2]}\nДобавленные договора:")
+        print(f"Информация о выбранном проекте:\nНазвание: {project[0][1]}\n"
+              f"Дата создания: {project[0][2]}\nДобавленные договора:")
         for contract in contracts:
             print(f"    {contract[1]}: {contract[4]}")
         print()
@@ -98,7 +99,8 @@ class ContractHandler(ChoiceHandler):
         contracts = self.db.get_all_records(self.db_table)
         print('ВСЕ ДОГОВОРЫ\n')
         for contract in contracts:
-            print(f"ID: {contract[0]}, НАЗВАНИЕ: {contract[1]}, ДАТА СОЗДАНИЯ: {contract[2]}, ТЕКУЩИЙ СТАТУС: {contract[4]}")
+            print(f"ID: {contract[0]}, НАЗВАНИЕ: {contract[1]}, ДАТА СОЗДАНИЯ: {contract[2]},"
+                  f" ТЕКУЩИЙ СТАТУС: {contract[4]}")
 
 
     def activate_contract(self) -> None:
