@@ -8,7 +8,7 @@ def add_header(method):
     @functools.wraps(method)
     def wrapper(*args, **kwargs):
         print("*" * 71)
-        print("*" * 10 + " ВЫХОД: 'E' / ВСЕ ПРОЕКТЫ: 'P' / ВСЕ ДОГОВОРЫ: 'C' " + "*" * 10)
+        print("*" * 10 + " ВЫХОД: 'exit' / ВСЕ ПРОЕКТЫ: 'pro' / ВСЕ ДОГОВОРЫ: 'cont' " + "*" * 10)
         print(" " * 20 + "*" * 31)
         print(" " * 30 + f"{method.__doc__}")
         result = method(*args, **kwargs)

@@ -119,9 +119,9 @@ class HotkeysChecker:
     def __init__(self):
         self.project_handler = ProjectHandler("projects")
         self.contract_handler = ContractHandler("contracts")
-        self.HOT_KEYS = {'E': self.quit,
-                         'P': self.project_handler.retrieve_all_objects,
-                         'C': self.contract_handler.retrieve_all_objects}
+        self.HOT_KEYS = {'exit': self.quit,
+                         'pro': self.project_handler.retrieve_all_objects,
+                         'cont': self.contract_handler.retrieve_all_objects}
 
     def check_input(self, input_made: str) -> Optional[int]:
         entered_val = input_made.strip()
